@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
 
     public bool jump = true;
 
+    bool tumbling = false;
+
     //Animator myAnim;
 
     // Start is called before the first frame update
@@ -46,6 +48,25 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             //myAnim.SetBool("RUnning", false);
+        }
+
+        //Debug.Log(myBody.angularVelocity);
+        if (!tumbling)
+        {
+            
+
+            if (myBody.angularVelocity > 100f)
+            {
+                tumbling = true;
+            }
+        }
+        else {
+            if (myBody.angularVelocity < 100f)
+            {
+                tumbling = false;
+
+                transform.rotation = Quaternion.Euler(0,0,90); 
+            }
         }
 
     }

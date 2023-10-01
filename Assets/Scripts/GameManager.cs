@@ -12,10 +12,23 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     TMP_Text timeRemainingUI;
 
+    [SerializeField]
+    Transform sleepometerPointer;
+
+    float playerEnergy = 100f;
+
+    float currentPlayerEnergy;
+
+    float pointerStartAngle = 0f;
+
+    float pointerEndAngle = -180f;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentPlayerEnergy = playerEnergy;
     }
 
     // Update is called once per frame
@@ -41,7 +54,12 @@ public class GameManager : MonoBehaviour
 
 
         //Player energy depletion
+        if (currentPlayerEnergy > 0f)
+        {
+            currentPlayerEnergy -= Time.deltaTime;
 
+            sleepometerPointer.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(pointerEndAngle, pointerStartAngle,currentPlayerEnergy/playerEnergy));
+        }
 
 
     }
