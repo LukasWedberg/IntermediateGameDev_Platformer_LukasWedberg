@@ -114,14 +114,19 @@ public class PlayerMovement : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col) {
         if (col.gameObject.transform.tag == "Taco")
         {
-            Debug.Log("OYE,SAVE SOME FOR ABUELITO");
+            //Debug.Log("OYE,SAVE SOME FOR ABUELITO");
 
-            Destroy(col.gameObject);
+            //Destroy(col.gameObject);
 
             myBody.AddForce(Vector2.up * boostPower, ForceMode2D.Impulse);
 
-            manager.currentPlayerEnergy += manager.tacoBonusEnergy; 
+            manager.currentPlayerEnergy += manager.tacoBonusEnergy;
 
+            TacoHover tacoScript = col.gameObject.GetComponent<TacoHover>();
+
+            Debug.Log(tacoScript);
+
+            tacoScript.hovering = false;
         }
     }
 

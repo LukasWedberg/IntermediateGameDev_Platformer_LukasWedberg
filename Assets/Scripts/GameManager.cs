@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 
@@ -15,7 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Transform sleepometerPointer;
 
-    
+
 
 
     float playerEnergy = 100f;
@@ -27,6 +28,19 @@ public class GameManager : MonoBehaviour
     float pointerEndAngle = -180f;
 
     public float tacoBonusEnergy;
+
+
+
+    bool napTime = false;
+
+    [SerializeField]
+    Image screenShroud;
+
+    float shroudAlpha = 0;
+
+    float shroudFadeSpeed = 1f;
+
+    float napTimer = 3f;
 
     // Start is called before the first frame update
     void Start()
@@ -40,34 +54,67 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 
-        //Altering the timer
-        if (timeAllowed > 0f)
+        if (napTime)
         {
-            timeAllowed -= Time.deltaTime;
+            shroudAlpha = Mathf.Lerp(shroudAlpha, 1, shroudFadeSpeed * Time.deltaTime);
 
-            string extraZero = "";
+            napTimer -= Time.deltaTime;
 
-            if ( (Mathf.Round(timeAllowed) % 60)/10 < 1)
+            if (napTimer < 0) {
+                napTime = false;
+                napTimer = 3f;
+
+                currentPlayerEnergy = playerEnergy;
+
+                //Edit timer here!
+                timeAllowed -= Random.Range(5f,15f);
+            }
+        }
+        else
+        {
+
+            shroudAlpha = Mathf.Lerp(shroudAlpha, 0, shroudFadeSpeed * Time.deltaTime);
+
+
+
+
+            //Altering the timer
+            if (timeAllowed > 0f)
             {
-                extraZero = "0";
+                timeAllowed -= Time.deltaTime;
+
+                string extraZero = "";
+
+                if ((Mathf.Round(timeAllowed) % 60) / 10 < 1)
+                {
+                    extraZero = "0";
+                }
+
+                timeRemainingUI.text = (Mathf.Ceil(timeAllowed / 60) - 1).ToString() + " : " + extraZero + (Mathf.Round(timeAllowed) % 60).ToString();
+
             }
 
-            timeRemainingUI.text = (Mathf.Ceil(timeAllowed/60)-1).ToString() +" : "+ extraZero + (Mathf.Round(timeAllowed)%60).ToString();
+
+
+            //Player energy depletion
+            if (currentPlayerEnergy > 0f)
+            {
+                currentPlayerEnergy = Mathf.Min(currentPlayerEnergy, playerEnergy);
+
+                currentPlayerEnergy -= Time.deltaTime;
+
+                sleepometerPointer.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(pointerEndAngle, pointerStartAngle, currentPlayerEnergy / playerEnergy));
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                napTime = true;
+            }
+
 
         }
 
-
-
-        //Player energy depletion
-        if (currentPlayerEnergy > 0f)
-        {
-            currentPlayerEnergy = Mathf.Min(currentPlayerEnergy, playerEnergy);
-
-            currentPlayerEnergy -= Time.deltaTime;
-
-            sleepometerPointer.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(pointerEndAngle, pointerStartAngle,currentPlayerEnergy/playerEnergy));
-        }
-
+        screenShroud.color = new Color(0.09803921568f, 0.15686274509f, 0.20784313725f, shroudAlpha);
 
     }
 }
