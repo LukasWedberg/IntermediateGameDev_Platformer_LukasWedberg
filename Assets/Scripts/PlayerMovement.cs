@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField]
+    GameManager manager;
+
     float horizontalMove;
     public float speed = 3f;
 
@@ -14,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public float castDist = 1f;
 
     public float jumpPower = 2f;
+    public float boostPower = 23;
     public float gravityScale = 5f;
     public float gravityFall = 40f;
 
@@ -106,4 +110,20 @@ public class PlayerMovement : MonoBehaviour
 
         myBody.velocity = new Vector3(moveSpeed, myBody.velocity.y, 0f);
     }
+
+    void OnTriggerEnter2D(Collider2D col) {
+        if (col.gameObject.transform.tag == "Taco")
+        {
+            Debug.Log("OYE,SAVE SOME FOR ABUELITO");
+
+            Destroy(col.gameObject);
+
+            myBody.AddForce(Vector2.up * boostPower, ForceMode2D.Impulse);
+
+            manager.currentPlayerEnergy += manager.tacoBonusEnergy; 
+
+        }
+    }
+
+
 }

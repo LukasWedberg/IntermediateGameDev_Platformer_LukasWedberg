@@ -15,20 +15,25 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Transform sleepometerPointer;
 
+    
+
+
     float playerEnergy = 100f;
 
-    float currentPlayerEnergy;
+    public float currentPlayerEnergy;
 
     float pointerStartAngle = 0f;
 
     float pointerEndAngle = -180f;
 
-
+    public float tacoBonusEnergy;
 
     // Start is called before the first frame update
     void Start()
     {
         currentPlayerEnergy = playerEnergy;
+
+        tacoBonusEnergy = playerEnergy/3;
     }
 
     // Update is called once per frame
@@ -56,6 +61,8 @@ public class GameManager : MonoBehaviour
         //Player energy depletion
         if (currentPlayerEnergy > 0f)
         {
+            currentPlayerEnergy = Mathf.Min(currentPlayerEnergy, playerEnergy);
+
             currentPlayerEnergy -= Time.deltaTime;
 
             sleepometerPointer.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(pointerEndAngle, pointerStartAngle,currentPlayerEnergy/playerEnergy));
