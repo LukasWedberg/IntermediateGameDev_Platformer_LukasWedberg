@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -25,13 +26,15 @@ public class PlayerMovement : MonoBehaviour
 
     bool tumbling = false;
 
+    Animator myAnim;
+
     //Animator myAnim;
 
     // Start is called before the first frame update
     void Start()
     {
         myBody = GetComponent<Rigidbody2D>();
-        //myAnim = GetComponent<Animator>();
+        myAnim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -41,17 +44,17 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && grounded)
         {
-            //myAnim.SetBool("Jumping", true);
+            myAnim.SetBool("Jumping", true);
             jump = true;
         }
 
         if (horizontalMove > 0.2f || horizontalMove < -0.2f)
         {
-            //myAnim.SetBool("RUnning", true);
+            myAnim.SetBool("Running", true);
         }
         else
         {
-            //myAnim.SetBool("RUnning", false);
+            myAnim.SetBool("Running", false);
         }
 
         //Debug.Log(myBody.angularVelocity);
@@ -69,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 tumbling = false;
 
-                transform.rotation = Quaternion.Euler(0,0,90); 
+                transform.rotation = Quaternion.Euler(0,0,0); 
             }
         }
 
@@ -100,7 +103,7 @@ public class PlayerMovement : MonoBehaviour
         //if (hit.collider != null && hit.transform.name == "Ground")
         if (hit.collider != null && hit.transform.tag == "Ground")
         {
-            //myAnim.SetBool("Jumping", false);
+            myAnim.SetBool("Jumping", false);
             grounded = true;
         }
         else
@@ -112,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D col) {
-        if (col.gameObject.transform.tag == "Taco")
+        if (col.gameObject.transform.tag == "Taco" || col.gameObject.transform.tag == "GoalTaco" ||col.gameObject.transform.tag == "SuperTaco")
         {
             //Debug.Log("OYE,SAVE SOME FOR ABUELITO");
 
@@ -127,6 +130,16 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log(tacoScript);
 
             tacoScript.hovering = false;
+
+            if (col.gameObject.transform.tag == "GoalTaco")
+            {
+                SceneManager.LoadScene("Level2");
+            }
+            else if (col.gameObject.transform.tag == "SuperTaco")
+            {
+                manager.victoryAchieved = true;
+            }
+
         }
     }
 

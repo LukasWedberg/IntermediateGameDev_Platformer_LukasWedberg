@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - Taco
+  - GoalTaco
+  - SuperTaco
   layers:
   - Default
   - TransparentFX
