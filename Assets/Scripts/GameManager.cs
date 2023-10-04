@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    float timeAllowed = 180f;
+    float timeAllowed = 120f;
 
     [SerializeField]
     TMP_Text timeRemainingUI;
@@ -26,7 +26,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject failureScreen;
 
-
+    [SerializeField]
+    Transform playerTransform;
 
     float playerEnergy = 10f;
 
@@ -141,6 +142,10 @@ public class GameManager : MonoBehaviour
                     napTime = true;
 
                     playerAnim.SetBool("Napping", true);
+
+                    playerTransform.rotation = Quaternion.Euler(0, 0, 0);
+
+
                 }
 
 
